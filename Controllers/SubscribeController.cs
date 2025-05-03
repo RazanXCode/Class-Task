@@ -20,12 +20,20 @@ namespace ReactiveLikeApiDemo.Controllers
             // Sets the response type to SSE so the browser can listen for real-time updates.
 
             // Used to keep the HTTP request alive until cancellation occurs.
+            //TaskCompletionSource()
 
             // Subscribes to throttled post updates and sends each update to the client via SSE format.
+            //subscription = BroadcastService.Subscribe(
 
             // Handles client disconnection by cleaning up the subscription and completing the task.
+            // token.Register(() =>
+            //{
+            //Dispose the subscriber
+            // Dispose the TaskCompletionSource()
+            //}
 
             // Keeps the HTTP request open as long as the client is connected.
+            //await tcs.Task;
         }
     }
 }

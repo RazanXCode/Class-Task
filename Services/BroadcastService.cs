@@ -22,7 +22,7 @@ namespace ReactiveLikeApiDemo.Services
             // Makes the observable hot (shared among subscribers).
             // Starts emitting values to subscribers.
 
-            _rateLimitedStream.Connect();
+           // _rateLimitedStream.Connect();
         }
 
         public static IDisposable Subscribe(Action<Post> onNext)
