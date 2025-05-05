@@ -17,23 +17,26 @@ namespace ReactiveLikeApiDemo.Controllers
         public async Task Subscribe(CancellationToken token)
         {
 
-            // Sets the response type to SSE so the browser can listen for real-time updates.
+            Response.Headers.Add("Content-Type", "text/event-stream");
 
-            // Used to keep the HTTP request alive until cancellation occurs.
-            //TaskCompletionSource()
+            var tcs = new TaskCompletionSource();
+            var subscription = BroadcastService.Subscribe(async post =>
+            {
+                if (!token.IsCancellationRequested)
+                {
+                    var json = JsonSerializer.Serialize(post);
+                    await Response.WriteAsync($"data: {json}\n\n");
+                    await Response.Body.FlushAsync();
+                }
+            });
 
-            // Subscribes to throttled post updates and sends each update to the client via SSE format.
-            //subscription = BroadcastService.Subscribe(
+            token.Register(() =>
+            {
+                subscription.Dispose();
+                tcs.TrySetResult();
+            });
 
-            // Handles client disconnection by cleaning up the subscription and completing the task.
-            // token.Register(() =>
-            //{
-            //Dispose the subscriber
-            // Dispose the TaskCompletionSource()
-            //}
-
-            // Keeps the HTTP request open as long as the client is connected.
-            //await tcs.Task;
+            await tcs.Task;
         }
     }
 }

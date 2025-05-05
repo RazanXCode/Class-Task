@@ -14,20 +14,20 @@ namespace ReactiveLikeApiDemo.Controllers
         [HttpPost("{id}/like")]
         public IActionResult LikePost(int id)
         {
-            // TryGetValue(...): Checks if the post exists.
+            if (DataStore.Posts.TryGetValue(id, out var post))
+            {
+                post.Likes++;
+                DataStore.PostSubject.OnNext(post); // Broadcast update
+                return Ok(post);
+            }
 
-            //post.Likes++: Increments the number of likes.
-
-            //PostSubject.OnNext(...): Triggers the broadcast to notify clients.
-
-            //return Ok(post): Returns the updated post as a JSON response.
+            return NotFound(new { message = "Post not found" });
         }
 
         [HttpGet]
         public IActionResult GetAllPosts()
         {
-            //Returns a list of all posts currently stored in memory.
-           // return Ok(DataStore.Posts.Values);
+             return Ok(DataStore.Posts.Values);
         }
     }
 }
